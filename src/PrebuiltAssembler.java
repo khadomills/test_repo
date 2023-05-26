@@ -179,11 +179,6 @@ public class PrebuiltAssembler extends JFrame {
 		createButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-
-				System.out.println(mbList.getSelectedIndex());
-				String comptext = compNameField.getText();
-				String pricetext = pricefield.getText();
-
 				//check all fields are filled
 				if (compNameField.getText().isEmpty() || pricefield.getText().isEmpty() || mbList.getSelectedIndex() < 1
 				|| psList.getSelectedIndex() < 1 || gpuList.getSelectedIndex() < 1 || cpuList.getSelectedIndex() < 1
@@ -192,9 +187,6 @@ public class PrebuiltAssembler extends JFrame {
 					JOptionPane.showMessageDialog(null, "All fields not entered.");
 					return;
 				}
-
-				System.out.println(comptext);
-				System.out.println(pricetext);
 
 				//ensure price entered is double and only has two decimal places
 				String priceInput = pricefield.getText();
@@ -216,14 +208,9 @@ public class PrebuiltAssembler extends JFrame {
 					return;
 				}
 
-				//check if prebuilt with same name exists
-
-
 				//create a prebuilt from existing parts
 				Prebuilt newComp = new Prebuilt(compNameField.getText(),(Part) mbList.getSelectedItem(),(Part) gpuList.getSelectedItem(),(Part) psList.getSelectedItem()
 						,(Part) cpuList.getSelectedItem(),(Part) ramList.getSelectedItem(),(Part) caseList.getSelectedItem(),(Part) storageList.getSelectedItem(),Double.parseDouble(pricefield.getText()));
-
-
 
 				//add prebuilt to database
 				try {
