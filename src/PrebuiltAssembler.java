@@ -4,14 +4,9 @@
  */
 
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.*;
@@ -33,6 +28,8 @@ public class PrebuiltAssembler extends JFrame {
 	private static String userName = "root"; //root should work too
 	private static String pass = "cs380";
 	private static Connection con;
+
+
 
 	/**
 	 * deducts 1 qty from part_id in database
@@ -77,7 +74,7 @@ public class PrebuiltAssembler extends JFrame {
 		return partList;
 	}
 	/**
-	 * Closes the feature window and returns to employee main window
+	 * Closes the feature window and returns to employee main window. Called after creating PC or pressing back button
 	 */
 	public void goBack() {
 		//return to employee main view
@@ -183,7 +180,21 @@ public class PrebuiltAssembler extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 
+				System.out.println(mbList.getSelectedIndex());
+				String comptext = compNameField.getText();
+				String pricetext = pricefield.getText();
+
 				//check all fields are filled
+				if (compNameField.getText().isEmpty() || pricefield.getText().isEmpty() || mbList.getSelectedIndex() < 1
+				|| psList.getSelectedIndex() < 1 || gpuList.getSelectedIndex() < 1 || cpuList.getSelectedIndex() < 1
+				|| ramList.getSelectedIndex() < 1 || storageList.getSelectedIndex() < 1 || caseList.getSelectedIndex() < 1) {
+					System.out.println("All fields not entered.");
+					JOptionPane.showMessageDialog(null, "All fields not entered.");
+					return;
+				}
+
+				System.out.println(comptext);
+				System.out.println(pricetext);
 
 				//ensure price entered is double and only has two decimal places
 				String priceInput = pricefield.getText();
@@ -196,12 +207,16 @@ public class PrebuiltAssembler extends JFrame {
 						double price = Double.parseDouble(priceInput);
 					} catch (NumberFormatException x) {
 						System.out.println("Price entered isn't valid");
+						JOptionPane.showMessageDialog(null, "Price entered isn't valid.");
 						return;
 					}
 				} else {
 					System.out.println("Price entered isn't valid.");
+					JOptionPane.showMessageDialog(null, "Price entered isn't valid.");
 					return;
 				}
+
+				//check if prebuilt with same name exists
 
 
 				//create a prebuilt from existing parts
@@ -228,10 +243,15 @@ public class PrebuiltAssembler extends JFrame {
 					deductQty(newComp.getRam().getId());
 					deductQty(newComp.getaCase().getId());
 					deductQty(newComp.getStorage().getId());
+					JOptionPane.showMessageDialog(null, "Prebuilt Created!");
+					goBack();
+
 
 
 				} catch (Exception ex) {
 					System.out.println("exception " + ex.getMessage());
+					// Display the dialog box
+					JOptionPane.showMessageDialog(null, "Prebuilt with same name already exists");
 					return;
 				}
 			}
@@ -258,6 +278,8 @@ public class PrebuiltAssembler extends JFrame {
 		JButton returnButton = new JButton("Back");
 		returnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//return to employee LP
+				goBack();
 			}
 		});
 		returnButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
