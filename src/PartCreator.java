@@ -1,8 +1,11 @@
-import java.awt.EventQueue;
+/**
+ * Class for creating a new part - employee view
+ * @author Nathan
+ */
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -12,6 +15,9 @@ import java.sql.Statement;
 
 public class PartCreator extends JFrame {
 
+	/**
+	 * Frame Object fields
+	 */
 	private JPanel contentPane;
 	private JTextField partNameField;
 	private JTextField partDescField;
@@ -164,7 +170,7 @@ public class PartCreator extends JFrame {
 					insertStatement.execute(insert);
 
 					//add new part to part_inventory table with qty 0
-					insert = "INSERT INTO `c_cats`.`part_inventory` (`part_id`, `qty`) VALUES ('" + newPartID + "', '0');";
+					insert = "INSERT INTO `c_cats`.`part_inventory` (`part_id`, `qty`, `pending_qty`) VALUES ('" + newPartID + "', '0', '0');";
 					insertStatement = con.createStatement();
 					insertStatement.execute(insert);
 
@@ -198,7 +204,5 @@ public class PartCreator extends JFrame {
 			System.out.println("exception " + e.getMessage());
 			return; //exit program if connection fails
 		}
-
-
 	}
 }
