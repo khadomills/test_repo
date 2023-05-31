@@ -14,13 +14,14 @@ public class PartOrderer extends JFrame {
 	/**
 	 * User field
 	 */
-	//private User currentUser;
-	private User currentUser = new User("M00004","ksam","password","Kate", "Samuleson", 1);
+	private User currentUser;
+	//private User currentUser = new User("M00004","ksam","password","Kate", "Samuleson", 1);
 	//private User currentUser = new User("E00001","nmill","password","Nathan ", "Miller", 1);
 
 	/**
 	 * Frame Object fields
 	 */
+	private static PartOrderer frame;
 	private JPanel contentPane;
 	private JTextField qtyField;
 
@@ -60,7 +61,11 @@ public class PartOrderer extends JFrame {
 	 * Closes the feature window and returns to employee main window. Called after pressing back button
 	 */
 	public void goBack() {
-		//return to employee main view
+
+		//return to employee LP
+		EmployeeDashboard elp = new EmployeeDashboard();
+		frame.setVisible(false);
+		elp.startEmployeeDashboard(con, currentUser);
 	}
 
 	/**
@@ -117,11 +122,11 @@ public class PartOrderer extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main() {
+	public static void start(User newUser) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PartOrderer frame = new PartOrderer();
+					frame = new PartOrderer(newUser);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -133,7 +138,7 @@ public class PartOrderer extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PartOrderer() {
+	public PartOrderer(User newUser) {
 		setTitle("Order Parts");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 494, 286);
@@ -290,8 +295,8 @@ public class PartOrderer extends JFrame {
 		contentPane.add(backbutton);
 
 
-		//add set current user
-		//User currentUser = newUser;
+		//set current user
+		User currentUser = newUser;
 
 		//if not a mgr, set approve button to not visible
 		if (!(currentUser.getUserID().charAt(0) == 'M')) {
