@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -24,11 +23,8 @@ public class PartCreator extends JFrame {
 	private JTextField priceField;
 
 	/**
-	 * DB connection info
+	 * DB connection
 	 */
-	private static String url = "jdbc:mysql://localhost:3306/c_cats";
-	private static String userName = "root"; //root should work too
-	private static String pass = "cs380";
 	private static Connection con;
 
 	/**
@@ -39,26 +35,17 @@ public class PartCreator extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PartCreator frame = new PartCreator();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public PartCreator() {
+	public PartCreator(Connection connection) {
+
+		//add passed in connection
+		con = connection;
+
+		//create application frame
 		setTitle("Part Creator");
+		setVisible(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -196,13 +183,5 @@ public class PartCreator extends JFrame {
 		backButton.setBounds(29, 181, 184, 44);
 		contentPane.add(backButton);
 
-		//create connection
-		try {
-			con = DriverManager.getConnection(url,userName,pass);
-			System.out.println("connected");
-		} catch (Exception e ) {
-			System.out.println("exception " + e.getMessage());
-			return; //exit program if connection fails
-		}
 	}
 }

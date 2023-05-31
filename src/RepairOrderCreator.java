@@ -2,6 +2,7 @@
  * Class for creating a new repair order - customer view
  * @author Nathan
  */
+
 import com.github.lgooddatepicker.components.DateTimePicker;
 
 import javax.swing.*;
@@ -12,18 +13,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class RepairOrderCreator extends JFrame {
 
 	/**
-	 * Other fields
+	 * User fields
 	 */
 
-	//hardcoded user for now, will need to be added to constructor with passed in user once fully implemented
-	User currentUser = new User("C00001","mikeynew","securepassword","Michael", "Jackson", 1);
+	User currentUser;
 
 	/**
 	 * Frame Object fields
@@ -34,11 +33,8 @@ public class RepairOrderCreator extends JFrame {
 	private JLabel charLabel;
 
 	/**
-	 * DB connection info
+	 * DB connection
 	 */
-	private static String url = "jdbc:mysql://localhost:3306/c_cats";
-	private static String userName = "root"; //root should work too
-	private static String pass = "cs380";
 	private static Connection con;
 
 	/**
@@ -49,37 +45,28 @@ public class RepairOrderCreator extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RepairOrderCreator frame = new RepairOrderCreator();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 
-	//needs to be updated with passed in user once implemented, "User user"
-	public RepairOrderCreator() {
+	public RepairOrderCreator(Connection connection, User newUser) {
+
+		//set user and connection
+		currentUser = newUser;
+		con = connection;
+
+		//create application frame
 		setTitle("Repair Order");
+		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 547, 370);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		SpringLayout sl_contentPane = new SpringLayout();
 		contentPane.setLayout(sl_contentPane);
-		
+
 		JLabel featureLabel = new JLabel("Create a repair order");
 		sl_contentPane.putConstraint(SpringLayout.NORTH, featureLabel, 16, SpringLayout.NORTH, contentPane);
 		sl_contentPane.putConstraint(SpringLayout.WEST, featureLabel, 188, SpringLayout.WEST, contentPane);
@@ -232,17 +219,5 @@ public class RepairOrderCreator extends JFrame {
 		});
 		createButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		contentPane.add(createButton);
-
-		//add passed in user
-		//User currentUser = user;
-
-		//create connection
-		try {
-			con = DriverManager.getConnection(url,userName,pass);
-			System.out.println("connected");
-		} catch (Exception e ) {
-			System.out.println("exception " + e.getMessage());
-			return; //exit program if connection fails
-		}
 	}
 }

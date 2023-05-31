@@ -3,13 +3,14 @@
  * @author Nathan
  */
 
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.sql.*;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class PrebuiltAssembler extends JFrame {
@@ -22,14 +23,9 @@ public class PrebuiltAssembler extends JFrame {
 	private JTextField pricefield;
 
 	/**
-	 * DB connection info
+	 * DB connection
 	 */
-	private static String url = "jdbc:mysql://localhost:3306/c_cats";
-	private static String userName = "root"; //root should work too
-	private static String pass = "cs380";
 	private static Connection con;
-
-
 
 	/**
 	 * deducts 1 qty from part_id in database
@@ -80,14 +76,15 @@ public class PrebuiltAssembler extends JFrame {
 		//return to employee main view
 	}
 
-
-
 	/**
 	 * Create the frame.
 	 */
-	public PrebuiltAssembler() {
-		
-		//initialize Jframe objects
+	public PrebuiltAssembler(Connection connection) {
+
+		//add passed in connection
+		con = connection;
+
+		//create frame
 		setTitle("Prebuilt Computer Assembler");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 473, 437);
@@ -272,15 +269,6 @@ public class PrebuiltAssembler extends JFrame {
 		returnButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		returnButton.setBounds(45, 330, 85, 24);
 		contentPane.add(returnButton);
-
-		//create connection
-		try {
-			con = DriverManager.getConnection(url,userName,pass);
-			System.out.println("connected");
-		} catch (Exception e ) {
-			System.out.println("exception " + e.getMessage());
-			return; //exit program if connection fails
-		}
 		
 		//pull parts from database if in stock and add to part lists
 		ArrayList<Part> mbAList = getParts("motherboard");
@@ -327,19 +315,5 @@ public class PrebuiltAssembler extends JFrame {
 		for (Part aPart : caseAList) {
 			caseList.addItem(aPart);
 		}
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PrebuiltAssembler frame = new PrebuiltAssembler();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
 	}
 }

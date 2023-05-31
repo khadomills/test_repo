@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -21,18 +20,14 @@ public class PartOrderer extends JFrame {
 	/**
 	 * Frame Object fields
 	 */
-	private static PartOrderer frame;
 	private JPanel contentPane;
 	private JTextField qtyField;
 
 	JTextArea textArea;
 
 	/**
-	 * DB connection info
+	 * DB connection
 	 */
-	private static String url = "jdbc:mysql://localhost:3306/c_cats";
-	private static String userName = "root"; //root should work too
-	private static String pass = "cs380";
 	private static Connection con;
 
 	/**
@@ -62,10 +57,10 @@ public class PartOrderer extends JFrame {
 	 */
 	public void goBack() {
 
-		//return to employee LP
-		EmployeeDashboard elp = new EmployeeDashboard();
-		frame.setVisible(false);
-		elp.startEmployeeDashboard(con, currentUser);
+//		//return to employee LP
+//		EmployeeDashboard elp = new EmployeeDashboard(con, currentUser);
+//		elp.setVisible(true);
+//		dispose();
 	}
 
 	/**
@@ -120,26 +115,18 @@ public class PartOrderer extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
-	 */
-	public static void start(User newUser) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new PartOrderer(newUser);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public PartOrderer(User newUser) {
+	public PartOrderer(Connection connection, User newUser) {
+
+		//set user and connection
+		currentUser = newUser;
+		con = connection;
+
+		//create application frame
 		setTitle("Order Parts");
+		setVisible(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 494, 286);
 		contentPane = new JPanel();
@@ -294,23 +281,12 @@ public class PartOrderer extends JFrame {
 		backbutton.setBounds(71, 194, 115, 42);
 		contentPane.add(backbutton);
 
-
-		//set current user
-		User currentUser = newUser;
-
 		//if not a mgr, set approve button to not visible
 		if (!(currentUser.getUserID().charAt(0) == 'M')) {
 			approveButton.setVisible(false);
 		}
 
-		//create connection
-		try {
-			con = DriverManager.getConnection(url,userName,pass);
-			System.out.println("connected");
-		} catch (Exception e ) {
-			System.out.println("exception " + e.getMessage());
-			return; //exit program if connection fails
-		}
+		con = connection;
 
 		//get all parts in system and add to combo box
 		ArrayList<Part> parts = getParts();
